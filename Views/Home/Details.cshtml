@@ -1,0 +1,59 @@
+﻿@model vente.Models.Article
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Article</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.titre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.titre)
+        </dd>
+
+        <dt>
+            <img src="~/Content/img/@Model.image" />
+        </dt>
+
+
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Categorie.libelle)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Categorie.libelle)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AspNetUser.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AspNetUser.Email)
+        </dd>
+
+    </dl>
+</div>
+@if ((User.IsInRole("Admins") || User.IsInRole("Vendeur")) && User.Identity.IsAuthenticated == true)
+{
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Ida }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+}

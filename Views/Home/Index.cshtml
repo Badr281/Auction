@@ -1,0 +1,233 @@
+﻿@model IEnumerable<vente.Models.Article>
+@{
+    ViewBag.Title = "Connexion";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Scripts/vue.min.js"></script>
+@*<fieldset>
+
+        <legend>Informations personnelle</legend>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-1">Prénom : </label>    <input type="text" class="form-control" />
+        </div>
+        <div class="form-group row ">
+            <label class="col-form-label col-sm-1">Nom : </label>  <input type="text" class="form-control" />
+        </div>
+    </fieldset>*@
+@*<section>
+        <div class="container text-center relative">
+           <h2> <b>Bienvenue sur le premier site web d'enchère au maroc </b></h2>
+            <p class="text-center">Merci de votre participation</p>
+
+
+
+        </div>
+        <div class="container text-center relative">
+            <h2 class="no-margin"><strong>1er site d'annonces gratuites au Maroc</strong></h2>
+            <p>Trouver la bonne affaire parmi 731 659 annonces</p>
+        </div>
+
+
+    </section>
+
+*@
+
+
+<!--Navbar-->
+<nav class="navbar navbar-expand-lg navbar-dark primary-color">
+
+    <!-- Navbar brand -->
+    <a class="navbar-brand" href="#">Navbar</a>
+
+    <!-- Collapse button -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav"
+            aria-controls="basicExampleNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="basicExampleNav">
+
+        <!-- Links -->
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">
+                    Home
+                    <span class="sr-only">(current)</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Features</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Pricing</a>
+            </li>
+
+            <!-- Dropdown -->
+            <li class="nav-item dropdown navbar-brand" style="background-color:blue">
+                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                   aria-expanded="false">Dropdown</a>
+                <div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Another action</a>
+                    <a class="dropdown-item" href="#">Something else here</a>
+                </div>
+            </li>
+
+        </ul>
+        <!-- Links -->
+
+        <form class="form-inline">
+            <div class="md-form my-0">
+                <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+            </div>
+        </form>
+    </div>
+    <!-- Collapsible content -->
+
+</nav>
+<!--/.Navbar-->
+@using (Html.BeginForm("Index", "Home", FormMethod.Get, new { id = "app" }))
+{
+    <div class="bg-info mx-0 ">
+        <div class="row col-12 offset-2">
+            <div>
+
+                <label><b>Rechercher  </b></label>&nbsp; &nbsp;
+                @Html.TextBox("Search")   <input type="submit" class="rounded" Value="Search" />&nbsp;  &nbsp;&nbsp;
+                @Html.DropDownList("Ca", null, "Select Categorie", new { id = "subCategory", @v_model = "d" })
+
+
+
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <br />
+
+
+    <div class="container">
+        <div class="form-group">
+
+
+            <div class="col-md-12" enctype="multipart/form-data">
+
+
+                <br />
+                <div class="row">
+                    @foreach (var t in Model)
+                    {
+                        <div class="col-sm-6 col-md-4">
+                            <div class="card" style="width: 18rem;">
+                                <div class="card-header">
+
+                                    <h4 class="card-title "><em><small>@Html.DisplayFor(items => t.titre)</small> </em>   </h4>
+                                </div>
+
+                                <div class="card-body flex-column d-flex">
+                                    <form>
+                                        <a href="@Url.Action("Details", "Home")/@t.Ida">   <img src="~/Content/img/@t.image" class="card-img-top  mb-3" required></a>
+                                        <p class="text-lg-center"> @Html.DisplayFor(items => t.Categorie.libelle)</p>
+                                        <p class="text-lg-left mb-2">
+                                            <I>  @Html.DisplayFor(items => t.description)</I>
+                                        </p>
+
+                                    </form>
+
+                                    <br />
+
+                                </div>
+
+                                @if ((User.IsInRole("Admins") || User.IsInRole("Vendeur")) && User.Identity.IsAuthenticated == true)
+                                {
+                                    @Html.ActionLink("Edit", "Edit", new { id = t.Ida }, new { id = t.Ida, @class = " btn-success btn-sm mx-2 text-center   rounded", @style = "margin-top: auto " }) <br />
+                                    @Html.ActionLink("Add +", "Create", null, new { @class = "btn-info btn-sm  mx-2 text-center mb-2 rounded", id = t.Ida })
+                                }
+                                @Html.ActionLink("Details", "Details", new { id = t.Ida }, new { @class = "btn-info btn-sm  mx-2 text-center mb-2 rounded", id = t.Ida })
+                                @*  *@
+
+
+                            </div>
+                            <br />
+                        </div>
+
+                        <br>
+                    }
+                </div>
+                <br>
+
+            </div>
+        </div>
+    </div>
+}
+
+@*@* Using viewjs to get Id Category  instead of jquery to load data on client side without refresh page  *@*@
+<script type="text/javascript">
+    var c = new Vue({
+        el: '#app',
+        data: {
+            d: ''
+        },
+        article: {
+            ida: 0,
+            desctiption: '',
+            UserId: '',
+            Idc: '',
+            titre: '',
+            image: '',
+        },
+    });
+
+
+
+
+
+</script>
+
+@*<script>
+
+        //Use document.ready in JQuery to add change handler to drop down
+        $(document).ready(function () {
+            $('#subCategory').on('change', function () {
+                //Call your filtering function here
+                FilterVenders();
+            });
+        });
+
+        //Declare and define a function for doing the filtering in your external
+        //script or in your script tag of View
+        function FilterVenders() {
+            //As I don't know what kind of logic you use to filter, you need to
+            //Work on this portion
+            const subCategoryValue = $('#subCategory').val();
+            const subCategoryText = $('#subCategory option:selected').text();
+
+            //Loop all the options in your drop down list and apply the class
+            //which makes their display as none (hide the options)
+            $('#subCategory > option').each(function () {
+                //If the option is not to be displayed, add the class
+                //This is where you need to step in and provide the filtering logic
+                if (condition) {
+                    //Check if option is already hidden, if not add the class to hide it
+                    if (!$(this).hasClass('hiddenOption')) {
+                        $(this).addClass('hiddenOption');
+                    }
+                } else {
+                    //Check if option is hidden, if so, remove class to unhide it
+                    if ($(this).hasClass('hiddenOption')) {
+                        $(this).removeClass('hiddenOption');
+                    }
+                }
+            });
+        }
+
+    </script>
+    <style>
+        hiddenOption {
+            display: none;
+        }
+    </style>*@
+
